@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+   $("button").click(function(){
+   		var sendInfo = { username: "un", password: "pp",phone: "ph" };
+						    
+       $.ajax({url: "http://localhost:9000/restservice/v1/api/user/add",
+        success: function(result){
+           $("#div1").html(result);
+       },
+       data: JSON.stringify(sendInfo),
+       });
+   });
+});
+</script>
+</head>
+<body>
+
+<div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
+
+<button>Get External Content</button>
+
+</body>
+</html>

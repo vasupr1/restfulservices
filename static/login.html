@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello jQuery</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script>
+		    function myFunction() {
+					 $(document).ready(function() {
+					 			var sendInfo = { username: $("#username").val(), password: $("#password").val() };
+								$('.greeting-username').append($("#username").val());
+							    $.ajax({
+							        url: "http://localhost:9000/restservice/v1/api/user/login",
+							        method: 'POST', 
+							        type: 'POST',   	
+							    	contentType: 'application/json',
+							    	cache: true,
+							    	success: function(data) {
+							    		window.location.href="/home.html?id="+data.id+"&token="+data.token;
+								    },
+								    error: function(data) {
+								        alert("error: login un-successful");
+								        window.location.href="/login.html";
+								    },
+								    data: JSON.stringify(sendInfo)	
+						    	});
+					});
+			}
+		</script>
+    </head>
+    <body>
+        <div >
+	    <h2>Login</h2>
+	    <form name="form" role="form">
+	        <div>
+	            <label for="username">Username</label>
+	            <input type="text" name="username" id="username"  required />
+	        </div>
+	        <div>
+	            <label for="password">Password</label>
+	            <input type="password" name="password" id="password" required />
+	        </div>
+	        <div>
+	            <input type="button"  name="login" id="login" value ="login" onClick="myFunction()"  />
+	        </div>
+	    </form>
+		</div>
+    </body>
+</html>

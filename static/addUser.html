@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello Test</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script>
+		
+			var url = document.URL;
+			var token = /token=([^&]+)/.exec(url)[1];
+			var resultToken = token ? token : ' ';
+			var logoutInfo = { token: resultToken };
+			
+			var url = document.URL;
+	        var id = /id=([^&]+)/.exec(url)[1];
+	        var resultId = id ? id : ' ';
+	        
+			function myFunction() {
+					 $(document).ready(function() {
+					 //$("#add").click(function() {
+					 		var sendInfo = { username: $("#username").val(), password: $("#password").val(),phone: $("#phone").val() };
+						    $.ajax({
+						        url: "http://localhost:9000/restservice/v1/api/user/add",
+						        method: 'PUT', 
+						        type: 'PUT',   	
+						    	contentType: 'application/json',
+						    	success: function (data) {
+							       window.location.href="/getUsers.html?id="+resultId+"&token="+resultToken;
+							    },
+							    error: function (data) {
+							        alert(JSON.stringify(data));
+							    },
+							    data: JSON.stringify(sendInfo)
+						    });
+					//});
+					});
+			}
+		</script>
+    </head>
+    <body>
+        <div>
+            <p class="greeting-username"> </p>
+        </div>
+        <div >
+	    <h2>Add user</h2>
+	    <form name="form" role="form">
+	        <div>
+	            <label for="username">Username</label>
+	            <input type="text" name="username" id="username" class="form-control"  required />
+	        </div>
+	        <div>
+	            <label for="password">Password</label>
+	            <input type="password" name="password" id="password" class="form-control"  required />
+	        </div>
+	        <div>
+	            <label for="phone">Phone</label>
+	            <input type="text" name="phone" id="phone" class="form-control"  required />
+	        </div>
+	        <!--div class="form-actions">
+	            <button type="submit" class="btn btn-primary" onclick="myFunction()"  >Add</button>
+	        </div-->
+	        
+	        <div>
+	            <input type="button"  name="add" id="add" value ="Add" onClick="myFunction()"  />
+	        </div>
+	        
+	        <div class="form-actions">
+	            <a href="/getUsers.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Get Users</U></a>
+	        </div>
+	        <div class="form-actions">
+	            <a href="/home.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Home</U></a>
+	        </div>
+	    </form>
+		</div>
+    </body>
+</html>

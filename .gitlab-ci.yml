@@ -1,0 +1,22 @@
+before_script:
+
+build:
+  script:
+    - mvn clean install
+    - cd om-core/target
+    - rm -f /var/restfulService/bin/om-core-1.0.0.jar
+    - sudo /bin/systemctl stop restfulService.service
+    - mv om-core-1.0.0.jar /var/restfulService/bin
+    - sudo /bin/systemctl start restfulService.service
+  only:
+    - dev
+
+build2:
+  script:
+    - gradle clean build
+    - rm -f /var/restfulService/bin/restfulService.jar
+    - sudo /bin/systemctl stop restfulService2.service
+    - cp build/libs/restfulService.jar /var/restfulService/bin
+    - sudo /bin/systemctl start restfulService2.service
+  only:
+    - dev

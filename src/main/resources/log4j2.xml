@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="TRACE">
+  <Properties>
+    <property name="log-path">${sys:log.file.path}</property>
+  </Properties>
+  <Appenders>
+    <Console name="console-log" target="SYSTEM_OUT">
+      <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+    </Console>
+
+    <RollingFile fileName="${log-path}/trace.log" filePattern="${log-path}/trace-%d{yyyy-MM-dd}-%i.log"
+      name="trace-log">
+      <JsonLayout compact="true" complete="false" eventEol="true"
+        locationInfo="false" properties="true"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1"
+          modulate="true"/>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+        <OnStartupTriggeringPolicy/>
+      </Policies>
+    </RollingFile>
+
+    <RollingFile fileName="${log-path}/error.log" filePattern="${log-path}/error-%d{yyyy-MM-dd}-%i.log"
+      name="error-log">
+      <JsonLayout compact="true" complete="false" eventEol="true"
+        locationInfo="false" properties="true"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1"
+          modulate="true"/>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+        <OnStartupTriggeringPolicy/>
+      </Policies>
+    </RollingFile>
+
+    <RollingFile fileName="${log-path}/debug.log" filePattern="${log-path}/debug-%d{yyyy-MM-dd}-%i.log"
+      name="debug-log">
+      <JsonLayout compact="true" complete="false" eventEol="true"
+        locationInfo="false" properties="true"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1"
+          modulate="true"/>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+        <OnStartupTriggeringPolicy/>
+      </Policies>
+    </RollingFile>
+
+
+    <RollingFile fileName="${log-path}/restservice.log" filePattern="${log-path}/restservice-%d{yyyy-MM-dd}-%i.log"
+      name="restservice-log">
+      <JsonLayout compact="true" complete="false" eventEol="true"
+        locationInfo="false" properties="true"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1"
+          modulate="true"/>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+        <OnStartupTriggeringPolicy/>
+      </Policies>
+    </RollingFile>
+
+  </Appenders>
+  <Loggers>
+    <Logger additivity="false" level="debug" name="restservice">
+      <appender-ref level="info" ref="trace-log"/>
+      <appender-ref level="error" ref="error-log"/>
+      <appender-ref level="debug" ref="debug-log"/>
+      <appender-ref level="debug" ref="console-log"/>
+    </Logger>
+    <Root additivity="false" level="info">
+      <AppenderRef ref="restservice-log"/>
+      <appender-ref level="debug" ref="console-log"/>
+    </Root>
+  </Loggers>
+
+</Configuration>

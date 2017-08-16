@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello jQuery</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="getUsers.js"></script>
+		<script> 
+			var url = document.URL;
+			var token = /token=([^&]+)/.exec(url)[1];
+			var resultToken = token ? token : ' ';
+			var logoutInfo = { token: resultToken };
+			
+			var url = document.URL;
+	        var id = /id=([^&]+)/.exec(url)[1];
+	        var resultId = id ? id : ' ';
+	    </script>
+    </head>
+    <body>
+        <div>
+            <p class="greeting-username"><U>Users</U> </p></br>
+        </div>
+        
+        <div class="form-actions">
+            <a href="/addUser.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Add Users</U></a>
+        </div>
+        
+        <div class="form-actions">
+            <a href="/home.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Home</U></a>
+        </div>
+	        
+    </body>
+</html>
