@@ -133,5 +133,22 @@ public class UsersResource {
    }
   }
   
+  /**
+   * user logout
+  */
+  @POST
+  @Path("/api/user/check/expiry/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RequestMapping(method = RequestMethod.POST, value = "/api/user/check/expiry/{id}", produces = MediaType.APPLICATION_JSON)
+  public Response checkExpiry(@PathParam("id") @PathVariable(name = "id") String id, @Valid @NotNull @RequestBody User user) {
+    String token=user.getToken();
+    String str="";//userService.checkAuthenticationExpiry(token, id);
+   if(str.equalsIgnoreCase("Ok")){
+	   return Response.ok().build();
+   }else{
+	   return	Response.status(400).entity("token expired/logout unsuccessful").type("application/json").build();
+   }
+  }
   
 }
