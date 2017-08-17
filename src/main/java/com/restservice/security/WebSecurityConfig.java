@@ -89,9 +89,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/getUsers.js").permitAll()
 				.antMatchers("/getUsers.html").permitAll()
 				
+				.antMatchers("/interval.html").permitAll()
+				.antMatchers("/expirytoken.js").permitAll()
+				
 				.antMatchers("com.mysql.jdbc.Driver").permitAll()
 				.antMatchers("jdbc:mysql://localhost:3306/restservice").permitAll()
 				
+			
 				//Class.forName("com.mysql.jdbc.Driver");  
 				//con=DriverManager.getConnection("jdbc:mysql://localhost:3306/restservice","root","root");
 				

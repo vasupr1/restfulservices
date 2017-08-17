@@ -39,10 +39,11 @@ public class UserService {
 	}
 
 	public String checkAuthentication(String token, String id) {
-		if(id.equalsIgnoreCase(jwtTokenUtil.validateTokenWithClientId(token))){
+		if(id.equalsIgnoreCase(jwtTokenUtil.validateTokenWithClientId(token)) && userDAO.updateLogoutUser(id)){
+			//userDAO.updateLogoutUser(id);
 			id="Ok";
 		}else{
-			id="Not Ok 401";
+			id="401";
 		}
 		return id;
 		
@@ -50,6 +51,15 @@ public class UserService {
 
 	public List<User> getLoginUsers() {
 		return userDAO.getLoginUsers();
+	}
+
+	public String checkAuthenticationExpiry(String token, String id) {
+		if(id.equalsIgnoreCase(jwtTokenUtil.validateTokenWithClientId(token)) && userDAO.checkLogoutUser(id)){
+			id="Ok";
+		}else{
+			id="401";
+		}
+		return id;
 	}
 	
 	

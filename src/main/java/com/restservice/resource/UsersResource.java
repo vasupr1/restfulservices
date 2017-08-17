@@ -64,10 +64,10 @@ public class UsersResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @RequestMapping(method = RequestMethod.PUT, value = "/api/user/add", produces = "application/json")
   public Response addUser(@Valid @NotNull @RequestBody User user) {
-    if(userService.createUser(user)!=null)
+    if(user.getUsername()!=null && user.getPassword()!=null && userService.createUser(user)!=null)
     	return Response.ok().entity(user).build();
     else
-    	return	Response.status(400).entity("user already exists").build();
+    	return	Response.status(400).entity("user already exists or username or pwd empty").build();
   }
   
   /**
@@ -129,7 +129,7 @@ public class UsersResource {
    if(str.equalsIgnoreCase("Ok")){
 	   return Response.ok().build();
    }else{
-	   return	Response.status(400).entity("logout unsuccessful").type("application/json").build();
+	   return	Response.status(400).entity("token expired/logout unsuccessful").type("application/json").build();
    }
   }
   
@@ -143,12 +143,11 @@ public class UsersResource {
   @RequestMapping(method = RequestMethod.POST, value = "/api/user/check/expiry/{id}", produces = MediaType.APPLICATION_JSON)
   public Response checkExpiry(@PathParam("id") @PathVariable(name = "id") String id, @Valid @NotNull @RequestBody User user) {
     String token=user.getToken();
-    String str="";//userService.checkAuthenticationExpiry(token, id);
+    String str=userService.checkAuthenticationExpiry(token, id);
    if(str.equalsIgnoreCase("Ok")){
 	   return Response.ok().build();
    }else{
 	   return	Response.status(400).entity("token expired/logout unsuccessful").type("application/json").build();
    }
   }
-  
 }

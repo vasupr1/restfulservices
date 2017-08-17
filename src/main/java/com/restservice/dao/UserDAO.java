@@ -77,6 +77,7 @@ public class UserDAO {
 		  }
 	} catch (SQLException e) {
 		e.printStackTrace();
+		return null;
 	} 
 	finally{
 		try {
@@ -163,9 +164,11 @@ private User checkLoginUser(User usr) {
 			
 			//update timestamp
 			SimpleDateFormat formate=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			PreparedStatement ps = con.prepareStatement("UPDATE users SET login = ?  WHERE username = ? ");
+			PreparedStatement ps = con.prepareStatement("UPDATE users SET login = ?,logout = ? ,token = ? WHERE username = ? ");
 		    ps.setString(1,formate.format(new Date()));
-		    ps.setString(2,usr.getUsername());
+		    ps.setInt(2,0);
+		    ps.setString(3,"valid");
+		    ps.setString(4,usr.getUsername());
 		    ps.executeUpdate();
 		    ps.close();
 		}
@@ -190,7 +193,7 @@ public List<User> getLoginUsers() {
 	try {
 		con=dbConnection();
 		stmt = con.createStatement();
-		ResultSet rs=stmt.executeQuery("SELECT username  FROM restservice.users WHERE TIMESTAMPDIFF(MINUTE, login, NOW()) <6");  
+		ResultSet rs=stmt.executeQuery("SELECT username  FROM restservice.users WHERE TIMESTAMPDIFF(MINUTE, login, NOW()) <6 and logout=0");  
 		while(rs.next()){
 			user=new User();
 			user.setUsername(rs.getString(1));
@@ -206,6 +209,64 @@ public List<User> getLoginUsers() {
 		}
 	}
 	return userList;
+}
+
+public boolean updateLogoutUser(String id) {
+	Connection con=dbConnection();
+	try {
+		Statement stmt = con.createStatement();
+		ResultSet rs=stmt.executeQuery("SELECT logout  FROM restservice.users WHERE logout=0 and id="+id);  
+		while(rs.next()){
+			if(rs.getInt(1)==0){
+				PreparedStatement ps = con.prepareStatement("UPDATE users SET logout = ?,token=?  WHERE id = ? ");
+			    ps.setInt(1,1);
+			    ps.setString(2,"Expired");
+			    ps.setInt(3,Integer.parseInt(id));
+			    ps.executeUpdate();
+			    ps.close();
+			    return true;
+			}
+		}
+		/*PreparedStatement ps = con.prepareStatement("UPDATE users SET logout = ?  WHERE id = ? ");
+	    ps.setInt(1,1);
+	    ps.setInt(2,Integer.parseInt(id));
+	    ps.executeUpdate();
+	    ps.close();*/
+	} catch (Exception e) {
+		e.printStackTrace();
+	}  
+	finally{
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	return false;
+}
+
+public boolean checkLogoutUser(String id) {
+	Connection con=dbConnection();
+	try {
+		Statement stmt = con.createStatement();
+		ResultSet rs=stmt.executeQuery("SELECT token  FROM restservice.users WHERE token='valid' and id="+id);  
+		while(rs.next()){
+			if(rs.getString(1)!="expired"){
+			    return true;
+			}
+		}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}  
+	finally{
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	return false;
 }
   
 }

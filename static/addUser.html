@@ -3,7 +3,9 @@
     <head>
         <title>Hello Test</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script>
+        <script src="expirytoken.js"></script>
+        
+		<script type>
 		
 			var url = document.URL;
 			var token = /token=([^&]+)/.exec(url)[1];
@@ -34,6 +36,54 @@
 					//});
 					});
 			}
+			/////////////////////////////////
+		    function checkExpiry() {
+		    	$(document).ready(function() {
+						    	
+							    $.ajax({
+							        url: "http://localhost:9000/restservice/v1/api/user/check/expiry/"+resultId,
+							        method: 'POST', 
+							        type: 'POST',   	
+							    	contentType: 'application/json',
+							    	cache: true,
+							    	success: function(data) {
+								        //alert(JSON.stringify(data));
+								    },
+								    error: function(data) {
+								         //alert("token expired");
+								         alert(JSON.stringify(data));
+								         window.location.href="/login.html";
+								    },
+								    data: JSON.stringify(logoutInfo)	
+							    });
+					});
+		    }
+		    
+		    /////////////////////////////////
+		    function logout() {
+		    	$(document).ready(function() {
+		    	//$("#logout").click(function() {
+						    	
+							    $.ajax({
+							        url: "http://localhost:9000/restservice/v1/api/user/logout/"+resultId,
+							        method: 'POST', 
+							        type: 'POST',   	
+							    	contentType: 'application/json',
+							    	cache: true,
+							    	success: function(data) {
+								        //alert(JSON.stringify(data));
+								        window.location.href="/login.html";
+								    },
+								    error: function(data) {
+								         alert("token expired");
+								         //alert(JSON.stringify(data));
+								         window.location.href="/login.html";
+								    },
+								    data: JSON.stringify(logoutInfo)	
+							    });
+					//});
+					});
+		    }
 		</script>
     </head>
     <body>
@@ -55,16 +105,13 @@
 	            <label for="phone">Phone</label>
 	            <input type="text" name="phone" id="phone" class="form-control"  required />
 	        </div>
-	        <!--div class="form-actions">
-	            <button type="submit" class="btn btn-primary" onclick="myFunction()"  >Add</button>
-	        </div-->
 	        
 	        <div>
 	            <input type="button"  name="add" id="add" value ="Add" onClick="myFunction()"  />
 	        </div>
 	        
 	        <div class="form-actions">
-	            <a href="/getUsers.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Get Users</U></a>
+	            <a href="/getUsers.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Get All Users</U></a>
 	        </div>
 	        <div class="form-actions">
 	            <a href="/home.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Home</U></a>

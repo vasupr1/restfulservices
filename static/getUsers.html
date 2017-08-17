@@ -4,7 +4,9 @@
         <title>Hello jQuery</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="getUsers.js"></script>
-		<script> 
+		<script src="expirytoken.js"></script>
+        
+		<script type> 
 			var url = document.URL;
 			var token = /token=([^&]+)/.exec(url)[1];
 			var resultToken = token ? token : ' ';
@@ -13,6 +15,54 @@
 			var url = document.URL;
 	        var id = /id=([^&]+)/.exec(url)[1];
 	        var resultId = id ? id : ' ';
+	        
+	        /////////////////////////////////
+		    function checkExpiry() {
+		    	$(document).ready(function() {
+						    	
+							    $.ajax({
+							        url: "http://localhost:9000/restservice/v1/api/user/check/expiry/"+resultId,
+							        method: 'POST', 
+							        type: 'POST',   	
+							    	contentType: 'application/json',
+							    	cache: true,
+							    	success: function(data) {
+								        //alert(JSON.stringify(data));
+								    },
+								    error: function(data) {
+								         //alert("token expired");
+								         alert(JSON.stringify(data));
+								         window.location.href="/login.html";
+								    },
+								    data: JSON.stringify(logoutInfo)	
+							    });
+					});
+		    }
+		     /////////////////////////////////
+		    function logout() {
+		    	$(document).ready(function() {
+		    	//$("#logout").click(function() {
+						    	
+							    $.ajax({
+							        url: "http://localhost:9000/restservice/v1/api/user/logout/"+resultId,
+							        method: 'POST', 
+							        type: 'POST',   	
+							    	contentType: 'application/json',
+							    	cache: true,
+							    	success: function(data) {
+								        //alert(JSON.stringify(data));
+								        window.location.href="/login.html";
+								    },
+								    error: function(data) {
+								         alert("token expired");
+								         //alert(JSON.stringify(data));
+								         window.location.href="/login.html";
+								    },
+								    data: JSON.stringify(logoutInfo)	
+							    });
+					//});
+					});
+		    }
 	    </script>
     </head>
     <body>
@@ -23,7 +73,9 @@
         <div class="form-actions">
             <a href="/addUser.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Add Users</U></a>
         </div>
-        
+        <div class="form-actions">
+            <a href="/loginUsersCount.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Recent login Users</U></br></a>
+        </div>
         <div class="form-actions">
             <a href="/home.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Home</U></a>
         </div>

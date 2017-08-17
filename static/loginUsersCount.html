@@ -4,7 +4,9 @@
         <title>Hello jQuery</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="loginUsersCount.js"></script>
-		<script>
+		<script src="expirytoken.js"></script>
+        
+		<script type>
 			var url = document.URL;
 			var token = /token=([^&]+)/.exec(url)[1];
 			var resultToken = token ? token : ' ';
@@ -13,17 +15,86 @@
 			var url = document.URL;
 	        var id = /id=([^&]+)/.exec(url)[1];
 	        var resultId = id ? id : ' ';
+	        
+			setInterval("recentLogin()",1000*15);
+			function recentLogin(){
+				//alert("interval check");
+				$('.greeting-username').empty();
+				$.ajax({
+			        url: "http://localhost:9000/restservice/v1/api/users/loginCount",
+			        method: 'GET', 
+			        type: 'GET',   	
+			    	contentType: 'application/json'
+			    	
+			    }).then(function(data) {
+			       $.each(data, function(index) {
+			            console.log(data[index].username);
+			            $('.greeting-username').append("<br/>"+data[index].username);
+			        });
+			    });
+			}
+			
+			/////////////////////////////////
+		    function checkExpiry() {
+		    	$(document).ready(function() {
+						    	
+							    $.ajax({
+							        url: "http://localhost:9000/restservice/v1/api/user/check/expiry/"+resultId,
+							        method: 'POST', 
+							        type: 'POST',   	
+							    	contentType: 'application/json',
+							    	cache: true,
+							    	success: function(data) {
+								        //alert(JSON.stringify(data));
+								    },
+								    error: function(data) {
+								         //alert("token expired");
+								         alert(JSON.stringify(data));
+								         window.location.href="/login.html";
+								    },
+								    data: JSON.stringify(logoutInfo)	
+							    });
+					});
+		    }
+		    /////////////////////////////////
+		    function logout() {
+		    	$(document).ready(function() {
+		    	//$("#logout").click(function() {
+						    	
+							    $.ajax({
+							        url: "http://localhost:9000/restservice/v1/api/user/logout/"+resultId,
+							        method: 'POST', 
+							        type: 'POST',   	
+							    	contentType: 'application/json',
+							    	cache: true,
+							    	success: function(data) {
+								        //alert(JSON.stringify(data));
+								        window.location.href="/login.html";
+								    },
+								    error: function(data) {
+								         alert("token expired");
+								         //alert(JSON.stringify(data));
+								         window.location.href="/login.html";
+								    },
+								    data: JSON.stringify(logoutInfo)	
+							    });
+					//});
+					});
+		    }
 	 </script>
     </head>
     <body>
         <div>
-            <p class="greeting-username"><U>Recent login Users</U> </p></br>
+        	<h4><U>Recent login Users</U> </h4>
+            <p class="greeting-username"> </p>
         </div>
         
         <div class="form-actions">
             <a href="/addUser.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Add Users</U></a>
         </div>
-        
+         <div class="form-actions">
+            <a href="/getUsers.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Get All Users</U></br></a>
+        </div>
         <div class="form-actions">
             <a href="/home.html" onclick="location.href=this.href+'?id='+resultId+'&token='+resultToken;return false;"><U></br>Home</U></a>
         </div>
